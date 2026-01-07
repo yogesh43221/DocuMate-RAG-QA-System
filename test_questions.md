@@ -1,129 +1,222 @@
-# Test Questions & Expected Behavior
+# Test Questions & Expected Answers
 
 ## Purpose
-Test the Document Q&A system with various question types to verify accuracy, grounding, and citation quality.
+Test the Document Q&A system with various question types to verify accuracy, grounding, and citation quality based on Test_Doc1.pdf (RAG paper) and Test_Doc2.docx (Hierarchical RL paper).
 
 ---
 
-## Test Document: Company Employee Handbook
+## Test Document 1: RAG Paper (Test_Doc1.pdf)
 
-### 1. Direct Factual Question
-**Question**: "What is the vacation policy?"
+### 1. What is RAG?
+**Question**: "What is RAG?"
 
-**Expected Behavior**:
-- Extract specific vacation days/hours
-- Include citation: `[Source: handbook.pdf, Page X]`
-- Should NOT add information not in the document
+**Expected Answer**: 
+RAG stands for Retrieval-Augmented Generation. It is a model that combines pre-trained parametric and non-parametric memory for language generation. RAG models use the input sequence to retrieve text documents and use them as additional context when generating the target sequence. The parametric memory is a pre-trained seq2seq model (like BART), and the non-parametric memory is a dense vector index of Wikipedia accessed with a pre-trained neural retriever.
 
-**Success Criteria**: Answer matches document exactly with correct page reference
+**Citation**: `[Source: Test_Doc1.pdf, Page 1]`
 
 ---
 
-### 2. Multi-Section Question
-**Question**: "What benefits does the company offer?"
+### 2. What are the two RAG model variants?
+**Question**: "What are the two RAG model variants described in the paper?"
 
-**Expected Behavior**:
-- May retrieve multiple chunks (health insurance, 401k, etc.)
-- Citations from multiple pages if benefits span sections
-- Synthesize information coherently
+**Expected Answer**:
+The paper describes two RAG model variants:
+1. **RAG-Sequence**: Uses the same retrieved document to generate the complete sequence
+2. **RAG-Token**: Can use different documents to generate different tokens in the sequence
 
-**Success Criteria**: Comprehensive list with multiple citations
+Both models marginalize over retrieved documents to generate outputs.
 
----
-
-### 3. Negative Test (Out of Scope)
-**Question**: "What is the company's stock price?"
-
-**Expected Behavior**:
-- Response: "I couldn't find this information in the uploaded document."
-- NO hallucination or external knowledge
-- NO citation
-
-**Success Criteria**: Refuses to answer without making up information
+**Citation**: `[Source: Test_Doc1.pdf, Page 2-3]`
 
 ---
 
-### 4. Implicit Information
-**Question**: "Can I work from home?"
+### 3. What datasets were used for evaluation?
+**Question**: "What datasets were used to evaluate RAG models?"
 
-**Expected Behavior**:
-- Find "remote work policy" or "work from home" section
-- Cite the relevant page
-- If policy is unclear, quote exactly what document says
+**Expected Answer**:
+RAG models were evaluated on multiple knowledge-intensive tasks including:
+- Natural Questions (NQ)
+- TriviaQA (TQA)
+- WebQuestions (WQ)
+- CuratedTrec (CT)
+- MS-MARCO for abstractive question answering
+- Jeopardy question generation
+- FEVER for fact verification
 
-**Success Criteria**: Grounded answer about remote work policy
-
----
-
-### 5. Numerical Data
-**Question**: "How many sick days do employees get per year?"
-
-**Expected Behavior**:
-- Extract exact number
-- Citation with page number
-- No approximation or assumption
-
-**Success Criteria**: Precise number with source
+**Citation**: `[Source: Test_Doc1.pdf, Page 4-5]`
 
 ---
 
-### 6. Conditional Information
-**Question**: "What happens if I resign without notice?"
+### 4. What is the retriever component?
+**Question**: "What retriever is used in RAG models?"
 
-**Expected Behavior**:
-- Find resignation/termination policy
-- Quote consequences or procedures
-- Citation with page
+**Expected Answer**:
+RAG uses DPR (Dense Passage Retrieval) as the retriever component. DPR follows a bi-encoder architecture where the retrieval probability p(z|x) is based on BERT encoders. It uses a pre-trained bi-encoder from DPR to initialize the retriever and builds a single MIPS index for Wikipedia using FAISS with Hierarchical Navigable Small World approximation.
 
-**Success Criteria**: Accurate policy details with source
+**Citation**: `[Source: Test_Doc1.pdf, Page 2-3]`
 
 ---
 
-### 7. Comparison Question
-**Question**: "What's the difference between sick leave and vacation time?"
+### 5. What generator is used?
+**Question**: "What generator model does RAG use?"
 
-**Expected Behavior**:
-- Retrieve chunks about both policies
-- Contrast the two clearly
-- Citations for both sections
+**Expected Answer**:
+RAG uses BART-large as the generator component, which is a pre-trained seq2seq transformer with 400M parameters. BART was pre-trained using a denoising objective and has obtained state-of-the-art results on a diverse set of generation tasks.
 
-**Success Criteria**: Clear comparison with dual citations
+**Citation**: `[Source: Test_Doc1.pdf, Page 3]`
 
 ---
 
-### 8. Ambiguous Question
-**Question**: "What about parking?"
+### 6. How many documents are retrieved?
+**Question**: "How many documents does RAG retrieve during training and testing?"
 
-**Expected Behavior**:
-- Find parking policy/benefits section
-- Provide details if available
-- If not found: "I couldn't find this information..."
+**Expected Answer**:
+During training, RAG retrieves the top K=5 or K=10 documents. For testing, different numbers are used depending on the task: 15 retrieved documents for RAG-Token models on Open-domain QA, and 50 retrieved documents for RAG-Sequence models.
 
-**Success Criteria**: Handles ambiguity appropriately
+**Citation**: `[Source: Test_Doc1.pdf, Page 3-4]`
 
 ---
 
-### 9. Long-Form Question
-**Question**: "What is the process for requesting time off and how far in advance should I submit the request?"
+### 7. RAG performance on Natural Questions
+**Question**: "What accuracy did RAG achieve on Natural Questions?"
 
-**Expected Behavior**:
-- Retrieve relevant PTO/leave request process
-- Multi-part answer addressing both aspects
-- Citations for each part
+**Expected Answer**:
+RAG-Sequence achieved 44.5% Exact Match score on Natural Questions test set, and RAG-Token achieved 44.1%. This outperformed previous state-of-the-art models including REALM (40.4%) and DPR (41.5%).
 
-**Success Criteria**: Complete answer with proper structure
+**Citation**: `[Source: Test_Doc1.pdf, Page 5-6]`
 
 ---
 
-### 10. Edge Case (Information at Page Boundary)
-**Question**: "What is the dress code policy?"
+### 8. Negative Test - Out of Scope
+**Question**: "What programming language was used to implement RAG?"
 
-**Expected Behavior**:
-- Should work even if policy spans page break
-- 100-token overlap should capture complete context
-- Citation may reference first page where policy starts
+**Expected Answer**:
+"I couldn't find this information in the uploaded document."
 
-**Success Criteria**: Complete answer without information cutoff
+**Citation**: None (out of scope)
+
+---
+
+## Test Document 2: Hierarchical RL Paper (Test_Doc2.docx)
+
+### 9. What is the main contribution of this paper?
+**Question**: "What is the main contribution of the hierarchical reinforcement learning paper?"
+
+**Expected Answer**:
+The main contribution is using natural language as a way to parameterize the subgoal space in hierarchical reinforcement learning. The paper presents a novel approach where they use data from humans solving tasks to softly supervise the goal space for long-range tasks in a 3D embodied environment. They use unconstrained natural language to represent sub-goals, which is easy to generate from naive human participants and flexible enough to represent a vast range of sub-goals.
+
+**Citation**: `[Source: Test_Doc2.docx, Page 1]`
+
+---
+
+### 10. What are the two agent components?
+**Question**: "What are the two components of the hierarchical agent?"
+
+**Expected Answer**:
+The hierarchical agent has two components:
+1. **Low-level (LL) agent**: Produces motor commands for the agent and follows relatively simple language commands
+2. **High-level (HL) agent**: Provides subgoals for the agent in the form of language commands
+
+Both use the same architecture. The HL agent issues language commands to the LL agent, which acts as sub-goals in the hierarchical setup.
+
+**Citation**: `[Source: Test_Doc2.docx, Page 1]`
+
+---
+
+### 11. What environment was used?
+**Question**: "What environment was used for the experiments?"
+
+**Expected Answer**:
+The experiments used a 3-D embodied environment in Unity. The tasks are similar to those described in DMLab, where the goal is to find and consume an apple. To acquire the goal apple, the agent must unlock a gate by placing a color-matched key object on a corresponding sensor. The tasks were classified into two Easy and two Hard tasks.
+
+**Citation**: `[Source: Test_Doc2.docx, Page 1]`
+
+---
+
+### 12. What losses are used to train the high-level agent?
+**Question**: "What losses are used to train the high-level agent?"
+
+**Expected Answer**:
+The high-level agent is trained with two losses:
+1. **Supervised training loss (BC loss)**: Behavioral cloning loss to match the language commands in the data produced by the 'Setter'
+2. **Reinforcement learning loss (RL loss)**: Uses V-trace to optimize language commands for goal-directed behavior based on environment rewards
+
+The total loss combines both: L_HL = w_BC * L_HL_BC + w_RL * L_HL_RL
+
+**Citation**: `[Source: Test_Doc2.docx, Page 1]`
+
+---
+
+### 13. How does hierarchical agent compare to flat agent?
+**Question**: "How does the hierarchical agent perform compared to the flat agent?"
+
+**Expected Answer**:
+The hierarchical agent significantly outperforms the flat agent. The flat agent can pick up on simpler tasks but not on harder tasks, while the hierarchical agent can learn both. The hierarchical agent also learns the easy tasks faster. The flat agent directly produces actions without a hierarchy, while the hierarchical agent produces language instructions every 8 timesteps.
+
+**Citation**: `[Source: Test_Doc2.docx, Page 1]`
+
+---
+
+### 14. Are both BC and RL losses necessary?
+**Question**: "Are both BC and RL losses necessary for the hierarchical agent?"
+
+**Expected Answer**:
+Yes, both losses are necessary. When trained with only BC or only RL loss, the agent cannot learn any of the tasks. The agent trained with both losses learns quickly. The best performance comes from placing comparable weight on both losses. Significantly overweighting one or the other loss leads to poorer performance.
+
+**Citation**: `[Source: Test_Doc2.docx, Page 1]`
+
+---
+
+### 15. What is the data collection method?
+**Question**: "How was data collected for training the agents?"
+
+**Expected Answer**:
+Data was collected using two players: a 'Setter' and a 'Solver'. For the given tasks, a single controllable avatar is controlled by the 'Solver'. The 'Setter' instructs the 'Solver' via a chat interface on how to solve the task. The 'Setter' can observe the 'Solver' but cannot interact with the environment directly. This approach is similar to Abramson et al. [2020].
+
+**Citation**: `[Source: Test_Doc2.docx, Page 1]`
+
+---
+
+### 16. Negative Test - Out of Scope
+**Question**: "What is the weather like in the Unity environment?"
+
+**Expected Answer**:
+"I couldn't find this information in the uploaded document."
+
+**Citation**: None (out of scope)
+
+---
+
+### 17. Multi-document question
+**Question**: "Do both papers use pre-trained models?"
+
+**Expected Answer**:
+Yes, both papers use pre-trained models. The RAG paper uses pre-trained BART-large as the generator and pre-trained DPR as the retriever. The hierarchical RL paper pre-trains the low-level agent to follow language commands by imitating expert humans on a large range of language conditional tasks.
+
+**Citation**: `[Source: Test_Doc1.pdf, Page 3]` and `[Source: Test_Doc2.docx, Page 1]`
+
+---
+
+## Quick Reference Summary
+
+### Test_Doc1.pdf (RAG Paper) - Key Facts:
+- RAG = Retrieval-Augmented Generation
+- Two variants: RAG-Sequence and RAG-Token
+- Uses BART-large (400M params) as generator
+- Uses DPR as retriever with Wikipedia index
+- Retrieves top-5 or top-10 documents during training
+- Achieves 44.5% EM on Natural Questions
+- Evaluated on NQ, TriviaQA, WebQuestions, CuratedTrec, MS-MARCO, Jeopardy, FEVER
+
+### Test_Doc2.docx (Hierarchical RL Paper) - Key Facts:
+- Uses natural language for subgoal parameterization
+- Two agents: Low-level (motor commands) and High-level (language subgoals)
+- Environment: 3D Unity environment with key-gate-apple tasks
+- Training: BC loss + RL loss (both necessary)
+- Data collection: 'Setter' (instructor) + 'Solver' (executor)
+- Hierarchical agent outperforms flat agent
+- Hard tasks require more diverse instructions than easy tasks
 
 ---
 
