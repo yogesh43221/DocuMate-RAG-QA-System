@@ -1,3 +1,37 @@
+## 🎥 Demo Videos
+
+The following demo videos showcase DocuMate’s capabilities using **real documents** and end-to-end workflows.
+
+### ▶️ Demo 1: PDF Document Q&A (Primary Demo)
+**Duration:** ~5 minutes  
+
+This video demonstrates:
+- Uploading a **multi-page PDF document**
+- Automatic document ingestion and indexing
+- Asking grounded questions
+- **Page-level citations**
+- Handling out-of-scope questions (no hallucination)
+
+🔗 **Watch Video:**  
+[PDF Demo – Document Q&A](https://www.loom.com/share/13889b4e70ef4da6b6cc1e7d692e1d09)
+
+---
+
+### ▶️ Demo 2: DOCX Document Q&A (Multi-format Support)
+**Duration:** ~4 minutes  
+
+This video demonstrates:
+- Uploading a **DOCX document**
+- Supporting a **different domain** from the PDF
+- Correct answer grounding per document
+- Citation generation
+- Knowledge base isolation across documents
+
+🔗 **Watch Video:**  
+[DOCX Demo – Multi-format Support](https://www.loom.com/share/5229be59a6d64765a607cf3fad89018b)
+
+> Note: Two separate demos are provided to clearly demonstrate both **primary PDF workflows** and **multi-format document support** without overloading a single video.
+
 # Document Q&A Assistant (RAG System)
 
 A web-based AI assistant that allows users to upload PDF documents and ask questions that are answered strictly based on the document's content using Retrieval-Augmented Generation (RAG).
