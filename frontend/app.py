@@ -2,8 +2,13 @@
 
 import streamlit as st
 import requests
+import os
 
-BACKEND_URL = "http://localhost:8000"
+# Auto-detect backend URL based on environment
+if os.getenv("STREAMLIT_SHARING") or os.getenv("STREAMLIT_CLOUD"):
+    BACKEND_URL = "http://localhost:8000"  # Backend runs in same container
+else:
+    BACKEND_URL = os.getenv("BACKEND_URL", "http://localhost:8000")
 
 st.set_page_config(page_title="Document Q&A Assistant", layout="wide")
 

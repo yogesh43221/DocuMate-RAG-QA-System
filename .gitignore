@@ -1,5 +1,6 @@
 # Environment variables
 .env
+.streamlit/secrets.toml
 
 # Python
 __pycache__/
@@ -9,7 +10,12 @@ __pycache__/
 .Python
 venv/
 env/
-ENV/
+
+# Data
+data/uploads/*.pdf
+data/uploads/*.docx
+data/uploads/*.txt
+data/uploads/*.md
 
 # IDE
 .vscode/
@@ -20,17 +26,3 @@ ENV/
 # OS
 .DS_Store
 Thumbs.db
-
-# Logs
-*.log
-
-# Temporary files
-*.tmp
-*.temp
-
-# Large files
-*.mp4
-demo_video.mp4
-
-# MongoDB local
-mongodb_data/
