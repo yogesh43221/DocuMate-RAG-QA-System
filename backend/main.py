@@ -21,19 +21,8 @@ from ingestion import extract_document, chunk_text
 from rag import embed_text, ask_question
 from vector_store import insert_chunks, clear_collection, get_stats, get_collection
 
-# Load environment variables from .env or Streamlit secrets
-try:
-    import streamlit as st
-    if hasattr(st, 'secrets'):
-        # Running on Streamlit Cloud
-        os.environ['GEMINI_API_KEY'] = st.secrets.get('GEMINI_API_KEY', '')
-        os.environ['MONGODB_URI'] = st.secrets.get('MONGODB_URI', '')
-except:
-    pass
-
-# Fallback to .env file
-if not os.getenv('GEMINI_API_KEY'):
-    load_dotenv()
+# Load environment variables
+load_dotenv()
 
 app = FastAPI(title="Document Q&A API")
 
