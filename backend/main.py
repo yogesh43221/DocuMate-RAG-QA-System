@@ -16,19 +16,23 @@ from fastapi import FastAPI, UploadFile, File, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from dotenv import load_dotenv
-import streamlit as st
 
 from ingestion import extract_document, chunk_text
 from rag import embed_text, ask_question
 from vector_store import insert_chunks, clear_collection, get_stats, get_collection
 
 # Load environment variables from .env or Streamlit secrets
-if hasattr(st, 'secrets'):
-    # Running on Streamlit Cloud
-    os.environ['GEMINI_API_KEY'] = st.secrets.get('GEMINI_API_KEY', '')
-    os.environ['MONGODB_URI'] = st.secrets.get('MONGODB_URI', '')
-else:
-    # Running locally
+try:
+    import streamlit as st
+    if hasattr(st, 'secrets'):
+        # Running on Streamlit Cloud
+        os.environ['GEMINI_API_KEY'] = st.secrets.get('GEMINI_API_KEY', '')
+        os.environ['MONGODB_URI'] = st.secrets.get('MONGODB_URI', '')
+except:
+    pass
+
+# Fallback to .env file
+if not os.getenv('GEMINI_API_KEY'):
     load_dotenv()
 
 app = FastAPI(title="Document Q&A API")
